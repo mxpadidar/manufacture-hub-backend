@@ -1,31 +1,23 @@
-from pathlib import Path
+from fastapi.security import OAuth2PasswordBearer
+from passlib.context import CryptContext
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from core.envs import envs
+from core.types import JwtConfigs
 
-
-class Config(BaseSettings):
-    base_dir: Path = Path(__file__).resolve().parent.parent.parent
-    debug: bool = True
-
-    postgres_driver: str = "postgresql+psycopg"
-    postgres_host: str = "localhost"
-    postgres_port: int = 5433
-    postgres_user: str = "postgres"
-    postgres_password: str = "postgres"
-    postgres_db: str = "postgres"
-
-    @property
-    def database_url(self) -> str:
-        url = f"{self.postgres_driver}://\
-                {self.postgres_user}:{self.postgres_password}@\
-                {self.postgres_host}:{self.postgres_port}/\
-                {self.postgres_db}"
-        return url.replace(" ", "")
-
-    model_config = SettingsConfigDict(
-        env_file=base_dir / ".env",
-        env_file_encoding="utf-8",
-    )
+engine = create_engine(envs.postgres_uri)
+session_maker = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 
-configs = Config()
+class Base(DeclarativeBase):
+    pass
+
+
+jwt_configs = JwtConfigs(
+    secret=envs.secret_key, algorithm=envs.jwt_algorithm, expires_in=envs.jwt_expires_in
+)
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

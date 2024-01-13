@@ -31,4 +31,8 @@ commit:
 	git commit -m "$$message"; \
 	git push -u origin master
 
-.PHONY: cleanup tree run-app dcup dcdown pre-commit pytest commit
+revision:
+	@read -p "Enter revision message: " message; \
+	alembic revision --autogenerate -m "$$message"
+
+.PHONY: cleanup tree run-app dcup dcdown pre-commit pytest commit revision
