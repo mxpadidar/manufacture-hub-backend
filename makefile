@@ -10,7 +10,7 @@ tree:
 	@tree -a -I "$(virtualenv)|.git|.data"
 
 run-app:
-	@cd ${source_dir} && python main.py
+	@poetry run python ${source_dir}/main.py
 
 dcup:
 	@docker compose up -d
