@@ -1,43 +1,46 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
-from accounts.auth import create_hashed_password, create_token
 from accounts.database import UserModel
-from accounts.models import User, UserCreate
-from core.types import Role, Token, TokenPayload
 
 
-def find_by_email(db: Session, email: str) -> User | None:
-    db_user = db.query(UserModel).filter(UserModel.email == email).one_or_none()
-    return User(**db_user.__dict__) if db_user else None
+def get_users(db: Session) -> list[UserModel]:
+    return db.query(UserModel).all()
 
 
-def find_by_phone(db: Session, phone: str) -> User | None:
-    db_user = db.query(UserModel).filter(UserModel.phone == phone).one_or_none()
-    return User(**db_user.__dict__) if db_user else None
+def get_user_by_id(db: Session, id: int) -> UserModel | None:
+    return db.query(UserModel).filter(UserModel.id == id).one_or_none()
 
 
-def create_user(db: Session, user: UserCreate, role: Role) -> User:
-    if find_by_email(db, user.email):
-        raise ValueError("User with this email already exists")
+def get_user_by_email(db: Session, email: str) -> UserModel | None:
+    return db.query(UserModel).filter(UserModel.email == email).one_or_none()
 
-    if find_by_phone(db, user.phone):
-        raise ValueError("User with this phone already exists")
 
+def get_user_by_phone(db: Session, phone: str) -> UserModel | None:
+    return db.query(UserModel).filter(UserModel.phone == phone).one_or_none()
+
+
+def create_user(
+    db: Session,
+    email: str,
+    hashed_password: str,
+    phone: str,
+    role_id: int,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
+    gender_id: Optional[int] = None,
+) -> UserModel:
     db_user = UserModel(
-        email=user.email,
-        password=create_hashed_password(user.password),
-        phone=user.phone,
-        role=role.value,
-        first_name=user.first_name,
-        last_name=user.last_name,
-        gender=user.gender.value if user.gender else None,
+        email=email,
+        password=hashed_password,
+        phone=phone,
+        role=role_id,
+        first_name=first_name,
+        last_name=last_name,
+        gender=gender_id,
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return User(**db_user.__dict__)
-
-
-def register_user(db: Session, user: UserCreate) -> Token:
-    new_user = create_user(db=db, user=user, role=Role.MANUFACTURER)
-    return create_token(TokenPayload(id=new_user.id, role=new_user.role.value))
+    return db_user
