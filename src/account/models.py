@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy import DateTime, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.configs import Base
+from core.database import Base
 
 
 class UserModel(Base):
@@ -23,5 +23,5 @@ class UserModel(Base):
     deleted_at: Mapped[Optional[datetime]]
     created_at: Mapped[Optional[datetime]] = mapped_column(DateTime, default=func.now())
     updated_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime, default=func.now(), onupdate=func.now()
+        DateTime, onupdate=func.now()
     )

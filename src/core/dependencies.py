@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from core.configs import session_maker
+from core.database import session_maker
 
 
 def get_db():

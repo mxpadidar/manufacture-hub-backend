@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Envs(BaseSettings):
+class Settings(BaseSettings):
     base_dir: Path = Path(__file__).resolve().parent.parent.parent
     debug: bool = True
 
@@ -38,4 +38,4 @@ class Envs(BaseSettings):
     )
 
 
-envs = Envs()
+settings = Settings()
