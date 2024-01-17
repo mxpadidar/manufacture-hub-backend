@@ -22,6 +22,4 @@ class UserModel(Base):
     last_login: Mapped[Optional[datetime]]
     deleted_at: Mapped[Optional[datetime]]
     created_at: Mapped[Optional[datetime]] = mapped_column(DateTime, default=func.now())
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime, onupdate=func.now()
-    )
+    updated_at: Mapped[Optional[datetime]] = mapped_column(DateTime, onupdate=func.now())

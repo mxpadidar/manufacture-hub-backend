@@ -1,14 +1,14 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 from account.enums import Gender, UserRole
 
 
 class User(BaseModel):
     id: int
-    email: str
+    email: EmailStr
     phone: str
     role: UserRole
     first_name: Optional[str]
@@ -21,7 +21,7 @@ class User(BaseModel):
 
 
 class UserCreate(BaseModel):
-    email: str
+    email: EmailStr
     password: str
     phone: str
     first_name: Optional[str] = None
@@ -29,6 +29,6 @@ class UserCreate(BaseModel):
     gender: Optional[Gender] = None
 
 
-class Token(BaseModel):
-    value: str
-    type: str
+class Authenticate(BaseModel):
+    email: EmailStr
+    password: str
