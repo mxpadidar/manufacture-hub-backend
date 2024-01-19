@@ -11,10 +11,11 @@ fastapi = "^0.108.0"
 uvicorn = "^0.25.0"
 sqlalchemy = "^2.0.25"
 psycopg = "^3.1.17"
-python-jose = {extras = ["cryptography"], version = "^3.3.0"}
-passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-jose = { extras = ["cryptography"], version = "^3.3.0" }
 pydantic-settings = "^2.1.0"
-pydantic = {extras = ["email"], version = "^2.5.3"}
+pydantic = { extras = ["email"], version = "^2.5.3" }
+passlib = "^1.7.4"
+bcrypt = "4.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -32,9 +33,6 @@ types-passlib = "^1.7.7.20240106"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-
-
 
 ########## BLACK
 [tool.black]

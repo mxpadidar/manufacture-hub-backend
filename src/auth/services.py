@@ -1,26 +1,12 @@
 from datetime import datetime
-from typing import NamedTuple, Optional
 
-from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
+from auth.schemas import Token, TokenData
 from core.settings import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/accounts/login")
-
-
-class Token(NamedTuple):
-    access_token: str
-    token_type: str
-
-
-class TokenData(NamedTuple):
-    user_id: Optional[int]
-    role_id: Optional[int]
-    exp: Optional[datetime]
 
 
 def hash_password(plain_password: str) -> str:
@@ -38,7 +24,7 @@ def create_access_token(user_id: int, role_id: int) -> Token:
         key=settings.secret_key,
         algorithm=settings.jwt_algorithm,
     )
-    return Token(token, "bearer")
+    return Token(access_token=token, token_type="bearer")
 
 
 def get_token_data(token: str) -> TokenData | None:
@@ -48,6 +34,11 @@ def get_token_data(token: str) -> TokenData | None:
             key=settings.secret_key,
             algorithms=[settings.jwt_algorithm],
         )
+        user_id = payload.get("user_id")
+        role_id = payload.get("role_id")
+        exp = payload.get("exp")
+        if not (user_id and role_id and exp):
+            return None
         return TokenData(
             user_id=payload.get("user_id"),
             role_id=payload.get("role_id"),

@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     secret_key: str = "secret"
     jwt_expires_in_seconds: int = 1800
     jwt_algorithm: str = "HS256"
+    token_url: str = "/accounts/login"
 
     @property
     def postgres_uri(self) -> str:
