@@ -27,3 +27,19 @@ class UserCreate(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     gender: Optional[Gender] = None
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    user_id: Optional[int]
+    role_id: Optional[int]
+    exp: Optional[datetime]
+
+
+class Login(BaseModel):
+    email: EmailStr
+    password: str

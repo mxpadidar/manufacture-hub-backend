@@ -1,12 +1,22 @@
-from fastapi import Depends
+from typing import Optional
+
+from fastapi import Depends, Request
 from sqlalchemy.orm import Session
 
 from account.models import UserModel
 from account.schemas import User
-from auth.dependencies import get_token_header
-from auth.services import get_token_data
+from account.services import get_token_data
 from core.dependencies import get_db
 from core.exceptions import BadRequestExp, UnAuthorizedExp
+
+
+def get_token_header(request: Request) -> str:
+    authorization: Optional[str] = request.headers.get("Authorization")
+    if authorization:
+        token = authorization.split(" ")[1]
+        return token
+    else:
+        raise UnAuthorizedExp
 
 
 def get_current_user(token: str = Depends(get_token_header), db: Session = Depends(get_db)) -> User:
