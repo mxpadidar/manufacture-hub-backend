@@ -2,7 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 
-from account.models import UserModel  # noqa
+from account.models import TokenModel, UserModel  # noqa
 from alembic import context
 from core.database import Base
 from core.settings import settings
