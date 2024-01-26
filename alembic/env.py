@@ -2,10 +2,10 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 
-from account.models import TokenModel, UserModel  # noqa
+from account.models.db_models import UserDB  # noqa
 from alembic import context
 from core.database import Base
-from core.settings import settings
+from core.settings import POSTGRES_URI
 
 config = context.config
 
@@ -13,7 +13,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", settings.postgres_uri)
+config.set_main_option("sqlalchemy.url", POSTGRES_URI)
 target_metadata = Base.metadata
 
 

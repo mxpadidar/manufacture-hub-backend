@@ -3,9 +3,9 @@ from enum import Enum, auto
 
 class UserRole(Enum):
     SUPERUSER = auto()
-    MANUFACTURER = auto()
+    OWNER = auto()
     STAFF = auto()
-    VISITOR = auto()
+    MEMBER = auto()
 
 
 class Gender(Enum):

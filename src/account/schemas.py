@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 
@@ -11,35 +10,35 @@ class User(BaseModel):
     email: EmailStr
     phone: str
     role: UserRole
-    first_name: Optional[str]
-    last_name: Optional[str]
-    gender: Optional[Gender]
-    last_login: Optional[datetime]
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
-    deleted_at: Optional[datetime]
+    gender: Gender
+    first_name: str
+    last_name: str
+    created_at: datetime
+    last_login: datetime
+    updated_at: datetime | None
+    deleted_at: datetime | None
 
 
-class UserCreate(BaseModel):
+class UserRegister(BaseModel):
     email: EmailStr
     password: str
     phone: str
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    gender: Optional[Gender] = None
+    first_name: str
+    last_name: str
+    gender: Gender
 
 
-class Token(BaseModel):
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class Tokens(BaseModel):
     access_token: str
-    token_type: str
+    refresh_token: str
 
 
 class TokenData(BaseModel):
-    user_id: Optional[int]
-    role_id: Optional[int]
-    exp: Optional[datetime]
-
-
-class Login(BaseModel):
-    email: EmailStr
-    password: str
+    user_id: int
+    role_id: int
+    expires_at: datetime
