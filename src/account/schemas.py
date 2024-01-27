@@ -18,6 +18,9 @@ class User(BaseModel):
     updated_at: datetime | None
     deleted_at: datetime | None
 
+    class Config:
+        orm_mode = True
+
 
 class UserRegister(BaseModel):
     email: EmailStr

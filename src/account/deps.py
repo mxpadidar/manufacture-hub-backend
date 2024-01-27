@@ -3,10 +3,10 @@ from typing import Optional
 from fastapi import Depends, Request
 from sqlalchemy.orm import Session
 
-from account.db_models import UserDB
+from account.db import UserDB
 from account.schemas import User
 from account.utils import decode_jwt
-from core.dependencies import get_db
+from core.deps import get_db
 from core.exceptions import BadRequestExp, UnAuthorizedExp
 
 

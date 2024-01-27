@@ -18,7 +18,15 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def generate_jwt(data: TokenData) -> str:
-    return jwt.encode(claims=data.model_dump(), key=SECRET_KEY, algorithm=JWT_ALGORITHM)
+    return jwt.encode(
+        claims={
+            "user_id": data.user_id,
+            "role_id": data.role_id,
+            "expires_at": data.expires_at.isoformat(),
+        },
+        key=SECRET_KEY,
+        algorithm=JWT_ALGORITHM,
+    )
 
 
 def decode_jwt(token: str) -> TokenData:

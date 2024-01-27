@@ -2,9 +2,9 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 
-from account.models.db_models import UserDB  # noqa
+from account.db import RevokedTokenDB, UserDB  # noqa
 from alembic import context
-from core.database import Base
+from core.db import Base
 from core.settings import POSTGRES_URI
 
 config = context.config

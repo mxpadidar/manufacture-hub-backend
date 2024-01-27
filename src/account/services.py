@@ -2,19 +2,20 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from account.db_models import RevokedTokenDB, UserDB
+from account.db import RevokedTokenDB, UserDB
 from account.enums import UserRole
 from account.schemas import TokenData, Tokens, User, UserRegister
 from account.utils import decode_jwt, generate_jwt, hash_password, verify_password
 from core.errors import AuthErr, ConflictErr, NotFoundErr
 from core.settings import ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LIFETIME
+from core.utils import model_to_dict
 
 
 def get_user(db: Session, id: int) -> User:
-    db_user = db.query(UserDB).filter(UserDB.id == id).one_or_none()
-    if not db_user:
+    user_db = db.query(UserDB).filter(UserDB.id == id).one_or_none()
+    if not user_db:
         raise NotFoundErr("User not found")
-    return User(**db_user.__dict__)
+    return User(**model_to_dict(user_db))
 
 
 def register_user(data: UserRegister, db: Session) -> User:
@@ -32,22 +33,22 @@ def register_user(data: UserRegister, db: Session) -> User:
     db.add(user_db)
     db.commit()
 
-    return User(**user_db.__dict__)
+    return User(**model_to_dict(user_db))
 
 
 def authenticate(db: Session, email: str, password: str) -> User:
-    db_user = db.query(UserDB).filter(UserDB.email == email).one_or_none()
-    if not db_user:
+    user_db = db.query(UserDB).filter(UserDB.email == email).one_or_none()
+    if not user_db:
         raise NotFoundErr("User not found")
 
-    if not verify_password(plain_password=password, hashed_password=db_user.password):
+    if not verify_password(plain_password=password, hashed_password=user_db.password):
         raise AuthErr("Incorrect password")
 
-    db_user.update(last_login=datetime.utcnow())
+    user_db.update(last_login=datetime.utcnow())
     db.commit()
-    db.refresh(db_user)
+    db.refresh(user_db)
 
-    return User(**db_user.__dict__)
+    return User(**user_db.__dict__)
 
 
 def generate_user_tokens(user_id: int, user_role_id: int) -> dict:

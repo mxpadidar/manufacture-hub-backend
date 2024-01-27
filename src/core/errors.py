@@ -17,13 +17,13 @@ class InvalidValueErr(Exception):
 
 
 class AuthErr(Exception):
-    def __init__(self, message: str = "Authentication error"):
+    def __init__(self, message: str | None = "Authentication error"):
         self.message = message
         super().__init__(self.message)
 
 
 class InvalidTokenErr(Exception):
-    def __init__(self, message: str = "Invalid token"):
+    def __init__(self, message: str | None = "Invalid token"):
         self.message = message
         super().__init__(self.message)
 

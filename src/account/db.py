@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, inspect
 from sqlalchemy.orm import Mapped, mapped_column
 
 from account.enums import Gender, UserRole
@@ -38,12 +38,15 @@ class UserDB(Base):
         self.email = email
         self.phone = phone
         self.password = password
-        self.role_id = role
-        self.gender_id = gender
+        self.role = role
+        self.gender = gender
         self.first_name = first_name
         self.last_name = last_name
         self.last_login = datetime.utcnow()
         self.created_at = datetime.utcnow()
+
+    def as_dict(self):
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
 
     def update(
         self,
