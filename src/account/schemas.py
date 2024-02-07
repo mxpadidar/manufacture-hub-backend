@@ -19,7 +19,7 @@ class User(BaseModel):
     deleted_at: datetime | None
 
     class Config:
-        orm_mode = True
+        from_attribute = True
 
 
 class UserRegister(BaseModel):
